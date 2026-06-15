@@ -1,4 +1,4 @@
-function Card(props) {
+function Card({ title = "Untitled", description = "No description available" }) {
   return (
     <div style={{
       border: "1px solid #ccc",
@@ -7,10 +7,8 @@ function Card(props) {
       borderRadius: "8px",
       width: "250px"
     }}>
-      <h3>{props.title}</h3>
-      <p>{props.description}</p>
+      <h3>{title}</h3>
+      <p>{description}</p>
     </div>
   );
 }
-
-export default Card;
