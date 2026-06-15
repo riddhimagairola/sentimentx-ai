@@ -16,11 +16,11 @@ function Home() {
       }}>
         <Card 
           title="Sentiment Analysis"
-          description="Detect whether reviews are positive, negative, or neutral"
+          description="Analyze reviews and classify sentiment as positive, negative, or neutral using AI"
         />
         <Card 
           title="AI Suggestions"
-          description="Get smart AI-generated responses for customer feedback"
+          description="Get smart AI-generated responses for customer feedback and improve performance"
         />
       </div>
 
