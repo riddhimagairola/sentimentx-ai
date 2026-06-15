@@ -12,3 +12,5 @@ function Card({ title = "Untitled", description = "No description available" }) 
     </div>
   );
 }
+
+export default Card;
