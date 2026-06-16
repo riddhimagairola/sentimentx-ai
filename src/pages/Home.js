@@ -5,28 +5,57 @@ import Footer from "../components/Footer";
 
 function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100">
+
       <Navbar />
+
+      {/* Hero Section */}
       <Hero />
 
-      <h1 className="text-3xl font-bold text-center text-blue-600 mt-6">
-        SentimentX AI Dashboard 
-      </h1>
+      {/* Stats / Highlight Section */}
+      <div className="text-center mt-14 px-4">
+        <h1 className="text-4xl font-bold text-gray-800">
+          Powering AI-Powered Sentiment Insights
+        </h1>
+        <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+          SentimentX helps businesses analyze customer feedback, detect emotions,
+          and generate actionable AI insights instantly.
+        </p>
+      </div>
 
-      <p className="text-center text-gray-600 mt-2">
-        Analyze customer reviews using AI-powered insights
-      </p>
+      {/* Feature Cards Section */}
+      <div className="flex flex-wrap justify-center gap-8 mt-12 px-6">
 
-      <div className="flex flex-wrap justify-center gap-6 mt-10 px-4">
         <Card
           title="Sentiment Analysis"
-          description="Analyze reviews and classify sentiment as positive, negative, or neutral using AI"
+          description="Automatically classify customer feedback into positive, negative, or neutral sentiment using AI models."
         />
 
         <Card
           title="AI Suggestions"
-          description="Get smart AI-generated responses for customer feedback and improve performance"
+          description="Generate intelligent replies and recommendations based on customer feedback patterns."
         />
+
+        <Card
+          title="Real-time Insights"
+          description="Track sentiment trends and analytics in real-time dashboards for better decision-making."
+        />
+
+      </div>
+
+      {/* Bottom CTA Section */}
+      <div className="text-center mt-16 px-6">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Start analyzing smarter today 🚀
+        </h2>
+
+        <p className="text-gray-500 mt-2">
+          Upgrade customer experience with AI-powered feedback analysis.
+        </p>
+
+        <button className="mt-5 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
+          Get Started
+        </button>
       </div>
 
       <Footer />
