@@ -1,35 +1,89 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
-function Navbar() {
+export default function Navbar() {
   return (
-    <nav style={{
-      background: "#333",
-      color: "white",
-      padding: "10px",
-      display: "flex",
-      justifyContent: "space-between"
-    }}>
-      <h2>SentimentX</h2>
+    <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md">
 
-      <div>
-        <Link to="/" style={{ color: "white", marginRight: "10px" }}>
+      {/* Logo */}
+      <h2 className="text-xl font-bold text-blue-600 dark:text-blue-400">
+        SentimentX
+      </h2>
+
+      {/* Links */}
+      <div className="flex items-center gap-6 font-medium">
+
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `transition ${
+              isActive
+                ? "text-blue-600 dark:text-blue-400 font-semibold"
+                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
+            }`
+          }
+        >
           Home
-        </Link>
+        </NavLink>
 
-        <Link to="/about" style={{ color: "white", marginRight: "10px" }}>
-          About
-        </Link>
+      
 
-        <Link to="/dashboard" style={{ color: "white", marginRight: "10px" }}>
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) =>
+            `transition ${
+              isActive
+                ? "text-blue-600 dark:text-blue-400 font-semibold"
+                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
+            }`
+          }
+        >
           Dashboard
-        </Link>
+        </NavLink>
 
-        <Link to="/login" style={{ color: "white" }}>
+        <NavLink
+          to="/login"
+          className={({ isActive }) =>
+            `transition ${
+              isActive
+                ? "text-blue-600 dark:text-blue-400 font-semibold"
+                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
+            }`
+          }
+        >
           Login
-        </Link>
+        </NavLink>
+        <NavLink
+        to="/ai"
+        className={({ isActive }) =>
+        `transition ${
+       isActive
+        ? "text-blue-600 dark:text-blue-400 font-semibold"
+        : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
+    }`
+  }
+>
+            AI Feature
+          </NavLink>
+          <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            `transition ${
+              isActive
+                ? "text-blue-600 dark:text-blue-400 font-semibold"
+                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
+            }`
+          }
+        >
+          About
+        </NavLink>
+        {/* Theme toggle */}
+        <div className="ml-2 pl-4 border-l border-slate-300 dark:border-slate-700">
+          <ThemeToggle />
+        </div>
+
       </div>
     </nav>
   );
 }
-
-export default Navbar;
