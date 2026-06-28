@@ -27,8 +27,6 @@ export default function Navbar() {
           Home
         </NavLink>
 
-      
-
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
@@ -40,6 +38,46 @@ export default function Navbar() {
           }
         >
           Dashboard
+        </NavLink>
+
+
+        <NavLink
+          to="/sentiments"
+          className={({ isActive }) =>
+            `transition ${
+              isActive
+                ? "text-blue-600 dark:text-blue-400 font-semibold"
+                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
+            }`
+          }
+        >
+          Sentiments
+        </NavLink>
+
+        <NavLink
+          to="/ai"
+          className={({ isActive }) =>
+            `transition ${
+              isActive
+                ? "text-blue-600 dark:text-blue-400 font-semibold"
+                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
+            }`
+          }
+        >
+          AI Feature
+        </NavLink>
+
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            `transition ${
+              isActive
+                ? "text-blue-600 dark:text-blue-400 font-semibold"
+                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
+            }`
+          }
+        >
+          About
         </NavLink>
 
         <NavLink
@@ -54,30 +92,7 @@ export default function Navbar() {
         >
           Login
         </NavLink>
-        <NavLink
-        to="/ai"
-        className={({ isActive }) =>
-        `transition ${
-       isActive
-        ? "text-blue-600 dark:text-blue-400 font-semibold"
-        : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
-    }`
-  }
->
-            AI Feature
-          </NavLink>
-          <NavLink
-          to="/about"
-          className={({ isActive }) =>
-            `transition ${
-              isActive
-                ? "text-blue-600 dark:text-blue-400 font-semibold"
-                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
-            }`
-          }
-        >
-          About
-        </NavLink>
+
         {/* Theme toggle */}
         <div className="ml-2 pl-4 border-l border-slate-300 dark:border-slate-700">
           <ThemeToggle />

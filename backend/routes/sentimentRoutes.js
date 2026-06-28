@@ -5,7 +5,7 @@ let sentiments = [
   {
     id: 1,
     text: "I love this product!",
-    sentiment: "Positive",
+    sentiment: "positive",
   },
 ];
 
@@ -27,7 +27,7 @@ router.post("/", (req, res) => {
   const newSentiment = {
     id: sentiments.length + 1,
     text,
-    sentiment: "Positive",
+    sentiment: "positive",
   };
 
   sentiments.push(newSentiment);

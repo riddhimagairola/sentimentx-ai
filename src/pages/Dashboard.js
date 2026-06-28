@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Footer from "../components/Footer";
 import Button from "../components/ui/Button";
@@ -11,6 +11,25 @@ function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  //  Backend state
+  const [stats, setStats] = useState(null);
+  const [loadingStats, setLoadingStats] = useState(true);
+  const [error, setError] = useState("");
+
+  //  Fetch dashboard data
+  useEffect(() => {
+    fetch("http://localhost:5000/api/dashboard")
+      .then((res) => res.json())
+      .then((data) => {
+        setStats(data);
+        setLoadingStats(false);
+      })
+      .catch(() => {
+        setError("Failed to load dashboard stats");
+        setLoadingStats(false);
+      });
+  }, []);
+
   const handleAction = () => {
     setLoading(true);
 
@@ -19,6 +38,15 @@ function Dashboard() {
       showToast("Dashboard action completed 🚀");
     }, 1000);
   };
+
+  //  Loader screen
+  if (loadingStats) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 p-6">
@@ -34,7 +62,12 @@ function Dashboard() {
         </p>
       </div>
 
-      {/* ACTION BAR (NEW) */}
+      {/* ERROR */}
+      {error && (
+        <p className="text-red-500 mt-2 text-sm">{error}</p>
+      )}
+
+      {/* ACTION BAR */}
       <div className="mt-4 flex gap-3">
         <Button onClick={handleAction}>
           Run Quick Action
@@ -51,19 +84,25 @@ function Dashboard() {
         {/* STATS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
 
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow hover:shadow-md transition">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
             <p className="text-sm text-gray-500">Total Analyses</p>
-            <p className="text-xl font-bold">1,240</p>
+            <p className="text-xl font-bold">
+              {stats?.totalAnalyses}
+            </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow hover:shadow-md transition">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
             <p className="text-sm text-gray-500">Positive</p>
-            <p className="text-xl font-bold text-green-500">72%</p>
+            <p className="text-xl font-bold text-green-500">
+              {stats?.positive}
+            </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow hover:shadow-md transition">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
             <p className="text-sm text-gray-500">Negative</p>
-            <p className="text-xl font-bold text-red-500">18%</p>
+            <p className="text-xl font-bold text-red-500">
+              {stats?.negative}
+            </p>
           </div>
 
         </div>
@@ -92,10 +131,10 @@ function Dashboard() {
           </h2>
 
           <p className="text-sm text-gray-500">
-            • User review analyzed → Positive  
+            • User review analyzed → Positive
           </p>
           <p className="text-sm text-gray-500">
-            • System updated sentiment model  
+            • System updated sentiment model
           </p>
         </div>
 

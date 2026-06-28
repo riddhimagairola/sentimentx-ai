@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
-
+import Sentiments from "./pages/Sentiments";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
@@ -34,8 +34,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
-
           <Route path="/ai" element={<AIFeature />} />
+          <Route path="/sentiments" element={<Sentiments />} />
 
         </Routes>
 
