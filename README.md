@@ -61,7 +61,7 @@ sentimentx-ai/
 ```
 ## System Architecture
 
-![System Architecture](E:/W5_SchemaDiagram_26100509.png)
+![System Architecture](architecture/system-architecture.png)
 ---
 
 ## 🗄 Database Choice
