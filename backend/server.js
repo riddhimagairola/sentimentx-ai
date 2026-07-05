@@ -1,15 +1,29 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const dns = require("node:dns");
+console.log("Loading sentiment routes...");
+
+const sentimentRoutes = require("./routes/sentimentRoutes");
+
+console.log("Sentiment routes loaded");
+
+// Force Google DNS instead of system DNS
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+
 // Import Routes
 const authRoutes = require("./routes/authRoutes");
-const sentimentRoutes = require("./routes/sentimentRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
 // Import Middleware
