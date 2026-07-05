@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
-import AIFeature from "./pages/AIFeature"; // ✅ ADD THIS
+import AIFeature from "./pages/AIFeature"; // 
 
 import Navbar from "./components/Navbar";
 

@@ -23,7 +23,7 @@ function Sentiments() {
     fetchSentiments();
   }, []);
 
-  // DELETE
+  // DELETE SENTIMENT
   const deleteSentiment = async (id) => {
     try {
       const res = await fetch(
@@ -34,9 +34,7 @@ function Sentiments() {
       );
 
       if (res.status === 204) {
-        setSentiments((prev) =>
-          prev.filter((item) => item.id !== id)
-        );
+        fetchSentiments();
       }
     } catch (err) {
       console.log(err);
@@ -53,54 +51,61 @@ function Sentiments() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
         Sentiments
       </h1>
 
-      {/* EMPTY STATE */}
       {sentiments.length === 0 ? (
         <p className="text-gray-500">No sentiments found.</p>
       ) : (
-        <div className="grid gap-3">
-
+        <div className="grid gap-4">
           {sentiments.map((item) => (
             <div
-              key={item.id}
-              className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow flex justify-between items-center"
+              key={item._id}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 flex justify-between items-start"
             >
-
               {/* LEFT SIDE */}
-              <div>
-                <p className="text-gray-700 dark:text-gray-200">
+              <div className="flex-1">
+                <p className="text-gray-800 dark:text-gray-100 text-base">
                   {item.text}
                 </p>
 
-                {/* BADGE */}
+                {/* SENTIMENT BADGE */}
                 <span
-                  className={`inline-block mt-2 px-3 py-1 rounded-full text-sm font-semibold ${
+                  className={`inline-block mt-3 px-3 py-1 rounded-full text-sm font-semibold ${
                     item.sentiment?.toLowerCase() === "positive"
                       ? "bg-green-100 text-green-700"
                       : item.sentiment?.toLowerCase() === "negative"
                       ? "bg-red-100 text-red-700"
-                      : "bg-gray-100 text-gray-600"
+                      : "bg-gray-100 text-gray-700"
                   }`}
                 >
                   {item.sentiment}
                 </span>
+
+                {/* IMPROVEMENT */}
+                {item.improvement && (
+                  <div className="mt-4 bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-3 rounded-lg">
+                    <p className="text-blue-700 dark:text-blue-300 font-semibold">
+                       Suggested Improvement
+                    </p>
+
+                    <p className="text-gray-700 dark:text-gray-200 text-sm mt-1">
+                      {item.improvement}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* DELETE BUTTON */}
               <button
-                onClick={() => deleteSentiment(item.id)}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm"
+                onClick={() => deleteSentiment(item._id)}
+                className="ml-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
               >
                 Delete
               </button>
-
             </div>
           ))}
-
         </div>
       )}
     </div>

@@ -1,159 +1,165 @@
-import { useState, useEffect } from "react";
-
-import Footer from "../components/Footer";
-import Button from "../components/ui/Button";
-import Input from "../components/ui/Input";
-import Modal from "../components/ui/Modal";
-import showToast from "../components/ui/Toast";
+import { useEffect, useState } from "react";
 import Loader from "../components/ui/Loader";
+import Footer from "../components/Footer";
 
 function Dashboard() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  //  Backend state
   const [stats, setStats] = useState(null);
-  const [loadingStats, setLoadingStats] = useState(true);
-  const [error, setError] = useState("");
+  const [recent, setRecent] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  //  Fetch dashboard data
   useEffect(() => {
-    fetch("http://localhost:5000/api/dashboard")
-      .then((res) => res.json())
-      .then((data) => {
-        setStats(data);
-        setLoadingStats(false);
-      })
-      .catch(() => {
-        setError("Failed to load dashboard stats");
-        setLoadingStats(false);
-      });
+    const loadDashboard = async () => {
+      try {
+        const statsRes = await fetch("http://localhost:5000/api/dashboard");
+        const statsData = await statsRes.json();
+
+        const reviewsRes = await fetch("http://localhost:5000/api/sentiments");
+        const reviewsData = await reviewsRes.json();
+
+        setStats(statsData);
+        setRecent(reviewsData.slice(0, 5));
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboard();
   }, []);
 
-  const handleAction = () => {
-    setLoading(true);
-
-    setTimeout(() => {
-      setLoading(false);
-      showToast("Dashboard action completed 🚀");
-    }, 1000);
-  };
-
-  //  Loader screen
-  if (loadingStats) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex justify-center items-center">
         <Loader />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10">
 
       {/* HEADER */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Dashboard Overview
+
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+          Dashboard
         </h1>
 
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
-          Live system insights and analytics
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
+          Monitor your homestay reviews and customer sentiment.
         </p>
       </div>
 
-      {/* ERROR */}
-      {error && (
-        <p className="text-red-500 mt-2 text-sm">{error}</p>
-      )}
+      {/* STATS */}
 
-      {/* ACTION BAR */}
-      <div className="mt-4 flex gap-3">
-        <Button onClick={handleAction}>
-          Run Quick Action
-        </Button>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
 
-        <Button onClick={() => setIsOpen(true)}>
-          Open Modal
-        </Button>
-      </div>
-
-      {/* CONTENT */}
-      <div className="flex-1">
-
-        {/* STATS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
-            <p className="text-sm text-gray-500">Total Analyses</p>
-            <p className="text-xl font-bold">
-              {stats?.totalAnalyses}
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
-            <p className="text-sm text-gray-500">Positive</p>
-            <p className="text-xl font-bold text-green-500">
-              {stats?.positive}
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
-            <p className="text-sm text-gray-500">Negative</p>
-            <p className="text-xl font-bold text-red-500">
-              {stats?.negative}
-            </p>
-          </div>
-
-        </div>
-
-        {/* LOADER DEMO */}
-        {loading && (
-          <div className="mt-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
-            <Loader />
-          </div>
-        )}
-
-        {/* CHART */}
-        <div className="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
-          <h2 className="font-semibold text-gray-900 dark:text-white mb-2">
-            Sentiment Trend
-          </h2>
-          <div className="h-40 flex items-center justify-center text-gray-500">
-            📊 Chart Placeholder (connect later with Recharts)
-          </div>
-        </div>
-
-        {/* ACTIVITY */}
-        <div className="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
-          <h2 className="font-semibold text-gray-900 dark:text-white mb-2">
-            Recent Activity
-          </h2>
-
-          <p className="text-sm text-gray-500">
-            • User review analyzed → Positive
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+          <p className="text-gray-500 text-sm">
+            Total Reviews
           </p>
-          <p className="text-sm text-gray-500">
-            • System updated sentiment model
+
+          <h2 className="text-4xl font-bold mt-3">
+            {stats.totalAnalyses}
+          </h2>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+          <p className="text-gray-500 text-sm">
+            Positive
           </p>
+
+          <h2 className="text-4xl font-bold mt-3 text-green-500">
+            {stats.positive}
+          </h2>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+          <p className="text-gray-500 text-sm">
+            Negative
+          </p>
+
+          <h2 className="text-4xl font-bold mt-3 text-red-500">
+            {stats.negative}
+          </h2>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+          <p className="text-gray-500 text-sm">
+            Neutral
+          </p>
+
+          <h2 className="text-4xl font-bold mt-3 text-gray-500">
+            {stats.neutral}
+          </h2>
         </div>
 
       </div>
 
-      {/* MODAL */}
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <h2 className="text-lg font-bold">Quick Dashboard Modal</h2>
-        <p className="text-gray-500 mt-2">
-          This shows reusable Modal component working.
-        </p>
-      </Modal>
+      {/* RECENT REVIEWS */}
 
-      {/* FOOTER */}
-      <div className="mt-auto">
-        <Footer />
+      <div className="mt-10">
+
+        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-5">
+          Recent Reviews
+        </h2>
+
+        <div className="space-y-5">
+
+          {recent.map((item) => (
+
+            <div
+              key={item._id}
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow p-5"
+            >
+
+              <p className="text-gray-800 dark:text-white text-lg">
+                {item.text}
+              </p>
+
+              <span
+                className={`inline-block mt-4 px-4 py-2 rounded-full text-sm font-semibold ${
+                  item.sentiment === "positive"
+                    ? "bg-green-100 text-green-700"
+                    : item.sentiment === "negative"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                {item.sentiment}
+              </span>
+
+              {item.improvement && (
+
+                <div className="mt-4 bg-blue-50 dark:bg-gray-700 rounded-xl p-4">
+
+                  <p className="text-blue-700 dark:text-blue-300 font-medium">
+                     Suggested Improvement
+                  </p>
+
+                  <p className="mt-1 text-gray-700 dark:text-gray-300">
+                    {item.improvement}
+                  </p>
+
+                </div>
+
+              )}
+
+              <p className="text-xs text-gray-500 mt-4">
+                {new Date(item.createdAt).toLocaleString()}
+              </p>
+
+            </div>
+
+          ))}
+
+        </div>
+
       </div>
-
+          <Footer />
     </div>
+    
   );
 }
 
