@@ -55,9 +55,13 @@ sentimentx-ai/
 │   └── index.js
 │
 ├── package.json
-└── README.md
+├── README.md
+├── architecture/
+│     └── W5_SchemaDiagram_26100509.png
 ```
+## System Architecture
 
+![System Architecture](architecture/W5_SchemaDiagram_26100509.png)
 ---
 
 ## 🗄 Database Choice
