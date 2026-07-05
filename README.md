@@ -39,6 +39,8 @@ SentimentX AI is a full-stack web application that analyzes homestay customer re
 ```
 sentimentx-ai/
 │
+├── architecture/
+│ └── system-architecture.png
 ├── backend/
 │   ├── middleware/
 │   ├── models/
@@ -56,8 +58,7 @@ sentimentx-ai/
 │
 ├── package.json
 ├── README.md
-├── architecture/
-│     └── W5_SchemaDiagram_26100509.png
+│   
 ```
 ## System Architecture
 
