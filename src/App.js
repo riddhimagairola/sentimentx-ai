@@ -7,7 +7,7 @@ import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import AIFeature from "./pages/AIFeature"; // 
-
+import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -32,10 +32,33 @@ function App() {
           
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/ai" element={<AIFeature />} />
-          <Route path="/sentiments" element={<Sentiments />} />
+          <Route
+  path="/dashboard"
+  element={
+    <ProtectedRoute>
+      <Dashboard />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/ai"
+  element={
+    <ProtectedRoute>
+      <AIFeature />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/sentiments"
+  element={
+    <ProtectedRoute>
+      <Sentiments />
+    </ProtectedRoute>
+  }
+/>
 
         </Routes>
 

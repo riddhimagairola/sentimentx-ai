@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Sentiment = require("../models/Sentiment");
-console.log("🔥 NEW sentimentRoutes loaded");
+const verifyToken = require("../middleware/verifyToken");
+console.log(" NEW sentimentRoutes loaded");
 // ==============================
 // GET all sentiments
 // ==============================
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const sentiments = await Sentiment.find().sort({ createdAt: -1 });
 
@@ -21,7 +22,7 @@ router.get("/", async (req, res) => {
 // ==============================
 // POST new sentiment
 // ==============================
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
     const { text } = req.body;
 
@@ -73,7 +74,7 @@ router.post("/", async (req, res) => {
 // ==============================
 // GET sentiment by ID
 // ==============================
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const sentiment = await Sentiment.findById(req.params.id);
 
@@ -96,7 +97,7 @@ router.get("/:id", async (req, res) => {
 // ==============================
 // UPDATE sentiment
 // ==============================
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const { text, sentiment } = req.body;
 
@@ -135,7 +136,7 @@ router.put("/:id", async (req, res) => {
 // ==============================
 // DELETE sentiment
 // ==============================
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const deletedSentiment = await Sentiment.findByIdAndDelete(req.params.id);
 

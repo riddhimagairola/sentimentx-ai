@@ -10,16 +10,36 @@ function Dashboard() {
   useEffect(() => {
     const loadDashboard = async () => {
       try {
+        const token = localStorage.getItem("token");
+
+        // Dashboard Stats
         const statsRes = await fetch("http://localhost:5000/api/dashboard");
         const statsData = await statsRes.json();
 
-        const reviewsRes = await fetch("http://localhost:5000/api/sentiments");
+        // Protected Sentiments API
+        const reviewsRes = await fetch(
+          "http://localhost:5000/api/sentiments",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // Token expired or invalid
+        if (reviewsRes.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          window.location.href = "/login";
+          return;
+        }
+
         const reviewsData = await reviewsRes.json();
 
         setStats(statsData);
-        setRecent(reviewsData.slice(0, 5));
+        setRecent(Array.isArray(reviewsData) ? reviewsData.slice(0, 5) : []);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -40,7 +60,6 @@ function Dashboard() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10">
 
       {/* HEADER */}
-
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
           Dashboard
@@ -52,53 +71,39 @@ function Dashboard() {
       </div>
 
       {/* STATS */}
-
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
-          <p className="text-gray-500 text-sm">
-            Total Reviews
-          </p>
-
+          <p className="text-gray-500 text-sm">Total Reviews</p>
           <h2 className="text-4xl font-bold mt-3">
-            {stats.totalAnalyses}
+            {stats?.totalAnalyses || 0}
           </h2>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
-          <p className="text-gray-500 text-sm">
-            Positive
-          </p>
-
+          <p className="text-gray-500 text-sm">Positive</p>
           <h2 className="text-4xl font-bold mt-3 text-green-500">
-            {stats.positive}
+            {stats?.positive || 0}
           </h2>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
-          <p className="text-gray-500 text-sm">
-            Negative
-          </p>
-
+          <p className="text-gray-500 text-sm">Negative</p>
           <h2 className="text-4xl font-bold mt-3 text-red-500">
-            {stats.negative}
+            {stats?.negative || 0}
           </h2>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
-          <p className="text-gray-500 text-sm">
-            Neutral
-          </p>
-
+          <p className="text-gray-500 text-sm">Neutral</p>
           <h2 className="text-4xl font-bold mt-3 text-gray-500">
-            {stats.neutral}
+            {stats?.neutral || 0}
           </h2>
         </div>
 
       </div>
 
       {/* RECENT REVIEWS */}
-
       <div className="mt-10">
 
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-5">
@@ -108,7 +113,6 @@ function Dashboard() {
         <div className="space-y-5">
 
           {recent.map((item) => (
-
             <div
               key={item._id}
               className="bg-white dark:bg-gray-800 rounded-2xl shadow p-5"
@@ -131,11 +135,10 @@ function Dashboard() {
               </span>
 
               {item.improvement && (
-
                 <div className="mt-4 bg-blue-50 dark:bg-gray-700 rounded-xl p-4">
 
                   <p className="text-blue-700 dark:text-blue-300 font-medium">
-                     Suggested Improvement
+                    Suggested Improvement
                   </p>
 
                   <p className="mt-1 text-gray-700 dark:text-gray-300">
@@ -143,7 +146,6 @@ function Dashboard() {
                   </p>
 
                 </div>
-
               )}
 
               <p className="text-xs text-gray-500 mt-4">
@@ -151,15 +153,15 @@ function Dashboard() {
               </p>
 
             </div>
-
           ))}
 
         </div>
 
       </div>
-          <Footer />
+
+      <Footer />
+
     </div>
-    
   );
 }
 

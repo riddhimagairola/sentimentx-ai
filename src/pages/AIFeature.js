@@ -14,21 +14,32 @@ export default function AIFeature() {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("token");
+
       const res = await fetch("http://localhost:5000/api/sentiments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ text }),
       });
 
-      if (!res.ok) throw new Error("Failed");
+      if (res.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error("Failed");
+      }
 
       await res.json();
 
       setText("");
 
-      //  DIRECT REDIRECT (NO POPUP)
       navigate("/sentiments");
 
     } catch (err) {
@@ -46,7 +57,7 @@ export default function AIFeature() {
       </h1>
 
       <p className="text-gray-500 dark:text-gray-400 mt-1">
-        Paste write down your sentiment and save it.
+        Paste your customer review below and save its sentiment.
       </p>
 
       <div className="mt-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow">

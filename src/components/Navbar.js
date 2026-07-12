@@ -1,8 +1,18 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md">
 
@@ -17,11 +27,9 @@ export default function Navbar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `transition ${
-              isActive
-                ? "text-blue-600 dark:text-blue-400 font-semibold"
-                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
-            }`
+            isActive
+              ? "text-blue-600 dark:text-blue-400 font-semibold"
+              : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
           }
         >
           Home
@@ -30,25 +38,20 @@ export default function Navbar() {
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
-            `transition ${
-              isActive
-                ? "text-blue-600 dark:text-blue-400 font-semibold"
-                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
-            }`
+            isActive
+              ? "text-blue-600 dark:text-blue-400 font-semibold"
+              : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
           }
         >
           Dashboard
         </NavLink>
 
-
         <NavLink
           to="/sentiments"
           className={({ isActive }) =>
-            `transition ${
-              isActive
-                ? "text-blue-600 dark:text-blue-400 font-semibold"
-                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
-            }`
+            isActive
+              ? "text-blue-600 dark:text-blue-400 font-semibold"
+              : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
           }
         >
           Sentiments
@@ -57,11 +60,9 @@ export default function Navbar() {
         <NavLink
           to="/ai"
           className={({ isActive }) =>
-            `transition ${
-              isActive
-                ? "text-blue-600 dark:text-blue-400 font-semibold"
-                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
-            }`
+            isActive
+              ? "text-blue-600 dark:text-blue-400 font-semibold"
+              : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
           }
         >
           AI Feature
@@ -70,30 +71,34 @@ export default function Navbar() {
         <NavLink
           to="/about"
           className={({ isActive }) =>
-            `transition ${
-              isActive
-                ? "text-blue-600 dark:text-blue-400 font-semibold"
-                : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
-            }`
+            isActive
+              ? "text-blue-600 dark:text-blue-400 font-semibold"
+              : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
           }
         >
           About
         </NavLink>
 
-        <NavLink
-          to="/login"
-          className={({ isActive }) =>
-            `transition ${
+        {!token ? (
+          <NavLink
+            to="/login"
+            className={({ isActive }) =>
               isActive
                 ? "text-blue-600 dark:text-blue-400 font-semibold"
                 : "text-slate-600 dark:text-slate-200 hover:text-blue-500"
-            }`
-          }
-        >
-          Login
-        </NavLink>
+            }
+          >
+            Login
+          </NavLink>
+        ) : (
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition"
+          >
+            Logout
+          </button>
+        )}
 
-        {/* Theme toggle */}
         <div className="ml-2 pl-4 border-l border-slate-300 dark:border-slate-700">
           <ThemeToggle />
         </div>
