@@ -13,7 +13,14 @@ function Dashboard() {
         const token = localStorage.getItem("token");
 
         // Dashboard Stats
-        const statsRes = await fetch("http://localhost:5000/api/dashboard");
+        const statsRes = await fetch(
+        "http://localhost:5000/api/dashboard",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
         const statsData = await statsRes.json();
 
         // Protected Sentiments API

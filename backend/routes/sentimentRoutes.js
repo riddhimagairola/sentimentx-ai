@@ -1,14 +1,18 @@
 const express = require("express");
 const router = express.Router();
+
 const Sentiment = require("../models/Sentiment");
 const verifyToken = require("../middleware/verifyToken");
-console.log(" NEW sentimentRoutes loaded");
+
 // ==============================
-// GET all sentiments
+// GET ALL SENTIMENTS OF LOGGED USER
 // ==============================
+
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const sentiments = await Sentiment.find().sort({ createdAt: -1 });
+    const sentiments = await Sentiment.find({
+      user: req.user.userId,
+    }).sort({ createdAt: -1 });
 
     res.status(200).json(sentiments);
   } catch (error) {
@@ -20,11 +24,12 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 // ==============================
-// POST new sentiment
+// CREATE SENTIMENT
 // ==============================
+
 router.post("/", verifyToken, async (req, res) => {
   try {
-    const { text } = req.body;
+    const { text, sentiment, improvement } = req.body;
 
     if (!text) {
       return res.status(400).json({
@@ -33,36 +38,14 @@ router.post("/", verifyToken, async (req, res) => {
       });
     }
 
-    let sentiment = "neutral";
-    let improvement = "";
-
-    const review = text.toLowerCase();
-
-    if (
-      review.includes("dirty") ||
-      review.includes("bad") ||
-      review.includes("terrible")
-    ) {
-      sentiment = "negative";
-      improvement =
-        "Improve cleanliness, maintenance and customer service.";
-    } else if (
-      review.includes("clean") ||
-      review.includes("excellent") ||
-      review.includes("friendly")
-    ) {
-      sentiment = "positive";
-      improvement =
-        "Keep maintaining the same quality of service.";
-    }
-
     const newSentiment = await Sentiment.create({
+      user: req.user.userId,
       text,
-      sentiment,
-      improvement,
+      sentiment: sentiment || "neutral",
+      improvement: improvement || "",
     });
 
-    res.status(200).json(newSentiment);
+    res.status(201).json(newSentiment);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -70,61 +53,32 @@ router.post("/", verifyToken, async (req, res) => {
     });
   }
 });
-
 // ==============================
-// GET sentiment by ID
+// UPDATE
 // ==============================
-router.get("/:id", verifyToken, async (req, res) => {
-  try {
-    const sentiment = await Sentiment.findById(req.params.id);
 
-    if (!sentiment) {
-      return res.status(404).json({
-        success: false,
-        message: "Sentiment not found",
-      });
-    }
-
-    res.status(200).json(sentiment);
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
-
-// ==============================
-// UPDATE sentiment
-// ==============================
 router.put("/:id", verifyToken, async (req, res) => {
   try {
-    const { text, sentiment } = req.body;
-
-    const updatedSentiment = await Sentiment.findByIdAndUpdate(
-      req.params.id,
+    const updated = await Sentiment.findOneAndUpdate(
       {
-        text,
-        sentiment,
+        _id: req.params.id,
+        user: req.user.userId,
       },
+      req.body,
       {
         new: true,
         runValidators: true,
       }
     );
 
-    if (!updatedSentiment) {
+    if (!updated) {
       return res.status(404).json({
         success: false,
         message: "Sentiment not found",
       });
     }
 
-    res.status(200).json({
-      success: true,
-      message: "Sentiment updated",
-      data: updatedSentiment,
-    });
+    res.json(updated);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -134,13 +88,17 @@ router.put("/:id", verifyToken, async (req, res) => {
 });
 
 // ==============================
-// DELETE sentiment
+// DELETE
 // ==============================
+
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
-    const deletedSentiment = await Sentiment.findByIdAndDelete(req.params.id);
+    const deleted = await Sentiment.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user.userId,
+    });
 
-    if (!deletedSentiment) {
+    if (!deleted) {
       return res.status(404).json({
         success: false,
         message: "Sentiment not found",
